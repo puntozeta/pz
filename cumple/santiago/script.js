@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const audio = document.getElementById("background-audio");
     const playButton = document.getElementById("play-audio");
 
+
+    audio.addEventListener("canplaythrough", () => {
+        playButton.style.display = "block";
+    });
+
     // Evento para iniciar el audio y ocultar el overlay
     playButton.addEventListener("click", function () {
         audio.play().then(() => {

@@ -7,19 +7,21 @@
   <link rel="stylesheet" href="https://public.codepenassets.com/css/reset-2.0.min.css">
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./custom.css">
+  <script src="https://unpkg.com/fireworks-js@2.x/dist/index.umd.js"></script>
 
 </head>
 
 <body>
-  
-  <div id="audio-overlay" class="overlay">
+
+  <div id="audio-overlay" class="overlay flex column">
     <div class="overlay-content">
-      <button id="play-audio" class="medieval-button">Ver mi invitación</button>
+      <button id="play-audio" class="medieval-button jump-button">Ver mi invitación</button>
     </div>
+    <img id="first-img" src="./first.png" alt="">
   </div>
 
   <div class="cover book-container">
-    <div class="book-spine"></div>
+    <div class="book-spine firework"></div>
     <div class="book">
       <label for="page-1" class="book__page book__page--1">
         <img class="img-page-left m-auto" src="portada-2.png" alt="">
@@ -29,15 +31,16 @@
         <div class="page__content flex">
           <div class="m-auto">
             <p class="page__content-credits color-primary">
-              <span class="bold">HORA</span> <br>
+              <span class="first-letter">H</span><span class="bold">ORA</span><br>
               23 de febrero 3:00 pm
             </p>
             <p class="page__content-credits color-primary">
-              <span class="bold">LUGAR</span> <br>
+              <span class="first-letter">L</span><span class="bold">UGAR</span> <br>
               Terraza Sweet Land Av. Guadalupe Victoria 127, Arroyo Hondo, 45130, Arroyo Hondo, 45130 Zapopan, Jal.
             </p>
             <div class="button-container">
-              <button id="button-map" class="medieval-button" onclick="openMap()" disabled>IR AL MAPA</button>
+              <button id="button-map" class="medieval-button jump-button" onclick="openMap()" disabled>IR AL
+                MAPA</button>
             </div>
           </div>
         </div>
@@ -51,21 +54,80 @@
       <label class="book__page book__page--2" id="main-page">
         <div class="book__page-front">
           <div id="main-page-content" class="page__content flex column">
-            <h1 class="page__content-book-title color-primary">FIESTA DE CUMPLEAÑOS</h1>
-
-            <button class="medieval-button" id="btn-next">Siguiente</button>
+            <h1 class="page__content-book-title color-primary" style="margin-top: 100px;">
+              <span class="first-letter">F</span>IESTA <span class="first-letter">D</span>E <span
+                class="first-letter">C</span>UMPLEAÑOS
+              <br>
+              <span class="page__content-author">Santiago López Valencia</span>
+            </h1>
+            <button class="medieval-button jump-button" id="btn-next">Siguiente</button>
           </div>
         </div>
         <div class="book__page-back">
-          <div class="page__content">
-
+          <div class="page__content flex column">
+            <img class="img-page-left m-auto" src="./1.png" alt="">
+            <img class="img-page-left m-auto" src="./2.png" alt="">
           </div>
         </div>
       </label>
     </div>
   </div>
-  <audio id="background-audio" src="./audio.mp3"></audio>
-  <!-- partial -->
+  <audio id="background-audio" src="./audio.mp3" preload="auto"></audio>
+  <div id="container-fireworks" class="fireworks"></div>
+  <script>
+    const container = document.querySelector('.fireworks')
+
+    const fireworks = new Fireworks.default(container, {
+      autoresize: true,
+      opacity: 0.5,
+      acceleration:2,
+      friction: 0.97,
+      gravity: 1.5,
+      particles: 10,
+      traceLength: 3,
+      traceSpeed: 10,
+      explosion: 10,
+      intensity: 30,
+      flickering: 50,
+      lineStyle: 'round',
+      hue: {
+        min: 0,
+        max: 360
+      },
+      delay: {
+        min: 30,
+        max: 60
+      },
+      rocketsPoint: {
+        min: 50,
+        max: 50
+      },
+      lineWidth: {
+        explosion: {
+          min: 1,
+          max: 3
+        },
+        trace: {
+          min: 1,
+          max: 2
+        }
+      },
+      brightness: {
+        min: 50,
+        max: 80
+      },
+      decay: {
+        min: 0.015,
+        max: 0.03
+      },
+      mouse: {
+        click: false,
+        move: false,
+        max: 1
+      }
+    })
+    fireworks.start()
+  </script>
   <script src="./script.js"></script>
 
 </body>

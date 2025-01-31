@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=MedievalSharp&family=Slackey&display=swap");
 
 :root {
   /* colors */
@@ -39,6 +39,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
   justify-content: center;
 }
 
@@ -46,7 +47,8 @@ body {
   /* width: calc(var(--baseline) * 60);
   height: calc(var(--baseline) * 42.6); */
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.3);
-  width: 60%;
+  max-width: 55rem;
+  z-index: 99;
 }
 
 .book {
@@ -164,7 +166,7 @@ body {
   margin-bottom: calc(var(--baseline) * 2);
   letter-spacing: 1px;
 }
-.book__page .page__content-credits span {
+.book__page .page__content-credits div span {
   display: block;
   font-size: calc(var(--base-size) * 1.2);
   letter-spacing: 0;
