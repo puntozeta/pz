@@ -181,3 +181,19 @@
     height: 100%;
     z-index: 90;
 }
+
+#about-me{
+    position: absolute;
+    top: auto;
+    bottom: 20px;
+    left: auto;
+    right: auto;
+    color: white;
+    display: flex;
+}
+
+#about-me img{
+    width: 25px;
+    margin-right: 2px;
+    margin-top: -3px;
+}
