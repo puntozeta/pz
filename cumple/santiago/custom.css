@@ -190,6 +190,7 @@
     right: auto;
     color: white;
     display: flex;
+    z-index: 99;
 }
 
 #about-me img{
