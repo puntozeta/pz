@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Mi cumple - Santiago</title>
-  <link rel="icon" type="image/png" href="./first.png">
+  <link rel="icon" type="image/png" href="./preload.png">
   <meta property="og:title" content="Cumpleaños - Santiago">
   <meta property="og:description" content="Estas coordialmente invitado">
   <meta property="og:image" content="https://puntozeta.github.io/pz/cumple/santiago/preload.png">
@@ -77,7 +77,10 @@
       </label>
     </div>
   </div>
-  <audio id="background-audio" src="./audio.mp3" preload="auto"></audio>
+  <audio id="background-audio" preload="auto" loop >
+    <source src="./audio.mp3"  type="audio/mpeg"></audio>  
+  </audio>
+  
   <div id="container-fireworks" class="fireworks"></div>
   <div id="about-me">
     <img src="./../../logo-sin-fondo.png" alt="logo-puntozeta">

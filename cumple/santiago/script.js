@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     playButton.addEventListener("click", function () {
         audio.play().then(() => {
             overlay.style.display = "none";  // Ocultar el overlay
-            mainContent.classList.remove("hidden"); // Mostrar el contenido principal
+            //mainContent.classList.remove("hidden"); // Mostrar el contenido principal
         }).catch(error => {
             console.error("Autoplay blocked:", error);
         });
