@@ -79,6 +79,10 @@
         height: 30px;
       }
     }
+    #container-button{
+        text-align: right;
+        margin-bottom: 200px;
+    }
   </style>
 </head>
 <body>
@@ -94,14 +98,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>Presentación</td><td>Portada de bienvenida con video, galería de imágenes, música o texto elegante.</td></tr>
-      <tr><td>Tiempo</td><td>Fecha del evento, temporizador, clima, línea de tiempo del itinerario, calendario, etc.</td></tr>
-      <tr><td>Galería de fotos</td><td>Galería elegante de fotos sobre el evento (pareja, historia, familia, etc).</td></tr>
-      <tr><td>Código de vestimenta</td><td>Información de vestimenta requerida, puede incluir imágenes, videos o texto elegante.</td></tr>
-      <tr><td>Preguntas frecuentes (FAQ)</td><td>Respuestas a dudas comunes: ¿Pueden ir niños?, ¿Hay estacionamiento?, etc.</td></tr>
-      <tr><td>Padres y padrinos</td><td>Información de los familiares y padrinos, imágenes y texto elegante.</td></tr>
-      <tr><td>Ubicación</td><td>Dirección del evento, mapa, Google Maps, QR, hoteles y restaurantes cercanos.</td></tr>
-      <tr><td>Regalos</td><td>Temática de los regalos, texto elegante y enlaces útiles.</td></tr>
+      <tr><td>Presentación</td><td>Sección principal o portada de bienvenida que se muestra al principio puede contener un video, galeria de imagenes, musica o texto elegante descriptivo</td></tr>
+      <tr><td>Tiempo</td><td>Sección para mostrar la fecha del evento, temporizador ... etc, puede contener animaciones, mostrar el clima pronosticado para esa fecha, linea de tiempo para mostrar el itinerario, boton de agregar al calendario ...</td></tr>
+      <tr><td>Galería de fotos</td><td>Sección para mostrar una galeria elegante de fotos sobre el evento (fotos en pareja, historia, familia ... etc)</td></tr>
+      <tr><td>Código de vestimenta</td><td>Sección para mostrar información de la vestimenta requerida en el evento, puede contener imagenes, videos o texto elegante descriptivo</td></tr>
+      <tr><td>Preguntas frecuentes (FAQ)</td><td>Es una seccón donde se muestra un listado de preguntas o dudas que los invitados podrian tener (¿Pueden ir niños? ¿Hay estacionamiento?¿Hora límite para confirmar?)</td></tr>
+      <tr><td>Padres y padrinos</td><td>Sección para mostrar información de los familiares y padrinos, puede contener imagenes y texto elegante descriptivo</td></tr>
+      <tr><td>Ubicación</td><td>Sección para mostrar la dirección del evento, puede contener un mapa con marcador, botón para mostrar en google maps, codigo QR para escanear la dirección, sección para mostrar hoteles y restauranes cercanos ...etc</td></tr>
+      <tr><td>Regalos</td><td>Sección para mostrar información sobre la tematica de los regalos, pude contener texto elegante descriptivo</td></tr>
       <tr><td>Confirmación</td><td>Botón o enlace a WhatsApp para confirmar asistencia.</td></tr>
     </tbody>
   </table>
@@ -128,7 +132,9 @@
     </table>
   </div>
 
-  <button onclick="descargarImagen()">📸 Descargar imagen de la cotización</button>
+  <div id="container-button">
+    <button onclick="descargarImagen()">📸 Descargar imagen de la cotización</button>
+  </div>
 
   <!-- html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
