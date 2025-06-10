@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Invitación de Boda - Cotizador</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 2rem;
+      margin: 1rem;
       background-color: #f9f9f9;
     }
 
@@ -23,8 +24,9 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 0.75rem;
+      padding: 1rem;
       vertical-align: top;
+      font-size: 1.2rem;
     }
 
     th {
@@ -44,19 +46,38 @@
       padding: 1rem;
     }
 
+    input[type="checkbox"] {
+      width: 25px;
+      height: 25px;
+      transform: scale(1.3);
+      cursor: pointer;
+    }
+
     button {
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1.1rem;
       background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
     }
 
     button:hover {
       background-color: #45a049;
+    }
+
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+
+      input[type="checkbox"] {
+        width: 30px;
+        height: 30px;
+      }
     }
   </style>
 </head>
@@ -73,14 +94,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>Presentación</td><td>Sección principal o portada de bienvenida con video, galería de imágenes, música o texto elegante descriptivo.</td></tr>
-      <tr><td>Tiempo</td><td>Para mostrar la fecha del evento, temporizador, clima, línea de tiempo del itinerario, botón de calendario, etc.</td></tr>
+      <tr><td>Presentación</td><td>Portada de bienvenida con video, galería de imágenes, música o texto elegante.</td></tr>
+      <tr><td>Tiempo</td><td>Fecha del evento, temporizador, clima, línea de tiempo del itinerario, calendario, etc.</td></tr>
       <tr><td>Galería de fotos</td><td>Galería elegante de fotos sobre el evento (pareja, historia, familia, etc).</td></tr>
       <tr><td>Código de vestimenta</td><td>Información de vestimenta requerida, puede incluir imágenes, videos o texto elegante.</td></tr>
-      <tr><td>Preguntas frecuentes (FAQ)</td><td>Lista de preguntas frecuentes como: ¿Pueden ir niños?, ¿Hay estacionamiento?, ¿Hora límite para confirmar?, etc.</td></tr>
+      <tr><td>Preguntas frecuentes (FAQ)</td><td>Respuestas a dudas comunes: ¿Pueden ir niños?, ¿Hay estacionamiento?, etc.</td></tr>
       <tr><td>Padres y padrinos</td><td>Información de los familiares y padrinos, imágenes y texto elegante.</td></tr>
-      <tr><td>Ubicación</td><td>Dirección del evento, mapa con marcador, botón a Google Maps, código QR, lista de hoteles y restaurantes cercanos.</td></tr>
-      <tr><td>Regalos</td><td>Información sobre la temática de los regalos, puede incluir texto elegante y enlaces.</td></tr>
+      <tr><td>Ubicación</td><td>Dirección del evento, mapa, Google Maps, QR, hoteles y restaurantes cercanos.</td></tr>
+      <tr><td>Regalos</td><td>Temática de los regalos, texto elegante y enlaces útiles.</td></tr>
       <tr><td>Confirmación</td><td>Botón o enlace a WhatsApp para confirmar asistencia.</td></tr>
     </tbody>
   </table>
@@ -139,10 +160,7 @@
       tbody.innerHTML = '';
       secciones.forEach((s, i) => {
         const row = document.createElement('tr');
-        if (s.obligatorio) {
-          row.classList.add('highlight');
-        }
-
+        if (s.obligatorio) row.classList.add('highlight');
         const checkboxId = `check-${i}`;
         const checked = s.obligatorio ? 'checked disabled' : '';
 
@@ -173,7 +191,7 @@
 
       html2canvas(tabla).then(canvas => {
         const enlace = document.createElement("a");
-        enlace.download = "cotizacion.png";
+        enlace.download = "cotizacion_boda.png";
         enlace.href = canvas.toDataURL("image/png");
         enlace.click();
       });
