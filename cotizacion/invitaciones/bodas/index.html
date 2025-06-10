@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Invitación de Boda - Cotizador</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f9f9f9;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .total {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .highlight {
+      background-color: #fdd;
+    }
+
+    .descripcion-table td {
+      padding: 1rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💍 Cotizador de Página de Boda</h1>
+
+  <h2>📌 Descripción de Secciones</h2>
+  <table class="descripcion-table">
+    <thead>
+      <tr>
+        <th>Secciones</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Presentación</td><td>Sección principal o portada de bienvenida con video, galería de imágenes, música o texto elegante descriptivo.</td></tr>
+      <tr><td>Tiempo</td><td>Para mostrar la fecha del evento, temporizador, clima, línea de tiempo del itinerario, botón de calendario, etc.</td></tr>
+      <tr><td>Galería de fotos</td><td>Galería elegante de fotos sobre el evento (pareja, historia, familia, etc).</td></tr>
+      <tr><td>Código de vestimenta</td><td>Información de vestimenta requerida, puede incluir imágenes, videos o texto elegante.</td></tr>
+      <tr><td>Preguntas frecuentes (FAQ)</td><td>Lista de preguntas frecuentes como: ¿Pueden ir niños?, ¿Hay estacionamiento?, ¿Hora límite para confirmar?, etc.</td></tr>
+      <tr><td>Padres y padrinos</td><td>Información de los familiares y padrinos, imágenes y texto elegante.</td></tr>
+      <tr><td>Ubicación</td><td>Dirección del evento, mapa con marcador, botón a Google Maps, código QR, lista de hoteles y restaurantes cercanos.</td></tr>
+      <tr><td>Regalos</td><td>Información sobre la temática de los regalos, puede incluir texto elegante y enlaces.</td></tr>
+      <tr><td>Confirmación</td><td>Botón o enlace a WhatsApp para confirmar asistencia.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>🧾 Cotizador de Secciones</h2>
+  <div id="cotizador-container">
+    <table id="cotizador">
+      <thead>
+        <tr>
+          <th>SECCIONES</th>
+          <th>Requerido (Marcar si se necesita)</th>
+          <th>Costo</th>
+        </tr>
+      </thead>
+      <tbody id="cotizador-body">
+        <!-- Insertado por JavaScript -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" class="total">Total:</td>
+          <td id="total">$0</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <button onclick="descargarImagen()">📸 Descargar imagen de la cotización</button>
+
+  <!-- html2canvas -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+    const secciones = [
+      { nombre: "Presentación, Padres y padrinos, Regalos", costo: 600 },
+      { nombre: "Widget de fecha (Calendario animado)", costo: 500 },
+      { nombre: "Widget de temporizador o cuenta regresiva", costo: 500 },
+      { nombre: "Widget de clima", costo: 500 },
+      { nombre: "Línea de tiempo para mostrar itinerario", costo: 300 },
+      { nombre: "Código de vestimenta", costo: 300 },
+      { nombre: "Galería de fotos", costo: 700 },
+      { nombre: "Preguntas frecuentes (FAQ)", costo: 300 },
+      { nombre: "Botón para agregar al calendario", costo: 300 },
+      { nombre: "Mapa con marcador de ubicación", costo: 500 },
+      { nombre: "QR para escanear dirección", costo: 300 },
+      { nombre: "Sección con hoteles y restaurantes", costo: 300 },
+      { nombre: "Botón para WhatsApp y confirmar", costo: 300 },
+      { nombre: "Botones para redes sociales", costo: 100 },
+      { nombre: "Adaptar la página a todos los dispositivos", costo: 300, obligatorio: true },
+      { nombre: "Costo por mantener la página en línea", costo: 300, obligatorio: true }
+    ];
+
+    const tbody = document.getElementById('cotizador-body');
+    const totalEl = document.getElementById('total');
+
+    function renderSecciones() {
+      tbody.innerHTML = '';
+      secciones.forEach((s, i) => {
+        const row = document.createElement('tr');
+        if (s.obligatorio) {
+          row.classList.add('highlight');
+        }
+
+        const checkboxId = `check-${i}`;
+        const checked = s.obligatorio ? 'checked disabled' : '';
+
+        row.innerHTML = `
+          <td>${s.nombre}</td>
+          <td><input type="checkbox" id="${checkboxId}" data-index="${i}" ${checked}></td>
+          <td>$${s.costo}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      calcularTotal();
+    }
+
+    function calcularTotal() {
+      let total = 0;
+      secciones.forEach((s, i) => {
+        const checkbox = document.getElementById(`check-${i}`);
+        if (checkbox && checkbox.checked) {
+          total += s.costo;
+        }
+      });
+      totalEl.textContent = `$${total}`;
+    }
+
+    function descargarImagen() {
+      const tabla = document.getElementById("cotizador");
+
+      html2canvas(tabla).then(canvas => {
+        const enlace = document.createElement("a");
+        enlace.download = "cotizacion.png";
+        enlace.href = canvas.toDataURL("image/png");
+        enlace.click();
+      });
+    }
+
+    renderSecciones();
+    tbody.addEventListener('change', calcularTotal);
+  </script>
+
+</body>
+</html>
