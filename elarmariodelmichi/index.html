@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff2ee">
+  <meta name="description" content="Encuentra El Armario del Michi en Urban Look, en el centro de Oaxaca de Juárez.">
+  <title>Cómo llegar · El Armario del Michi</title>
+  <link rel="icon" type="image/png" href="./logo.png">
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #48352f; background: #fffaf8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 36px 22px; }
+    main { width: 100%; max-width: 420px; text-align: center; }
+    .logo-loader { position: relative; width: 188px; height: 188px; margin: 0 auto 28px; padding: 10px; }
+    .logo-loader::before { content: ""; position: absolute; inset: 0; border: 2px solid #f6ded6; border-top-color: #f47d62; border-right-color: #f47d62; border-radius: 50%; animation: spin 1.4s linear infinite; }
+    .logo-loader img { display: block; width: 100%; height: 100%; border-radius: 50%; }
+    .brand { margin: 0 0 22px; font-size: 1rem; font-weight: 650; letter-spacing: .035em; }
+    h1 { margin: 0 0 12px; font-size: clamp(1.65rem, 6vw, 2rem); letter-spacing: -.035em; line-height: 1.2; }
+    .status { min-height: 3em; margin: 0 0 26px; color: #786158; font-size: 1rem; line-height: 1.5; }
+    .destination { padding: 22px 16px; border-top: 1px solid #efdcd5; border-bottom: 1px solid #efdcd5; }
+    .destination strong { display: block; margin-bottom: 8px; font-size: 1.125rem; }
+    address { font-style: normal; color: #786158; font-size: .9375rem; line-height: 1.65; }
+    .open-map { display: block; margin-top: 26px; padding: 15px 20px; border-radius: 14px; background: #9c412f; color: #fff; text-decoration: none; font-size: 1rem; font-weight: 650; transition: background .2s; }
+    .open-map:hover { background: #7e3325; }
+    a:focus-visible { outline: 3px solid #48352f; outline-offset: 5px; }
+    .other-map { display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; padding: 8px; color: #786158; font-size: .875rem; text-underline-offset: 4px; }
+    .is-idle .logo-loader::before { animation: none; border-color: #f6ded6; }
+    noscript p { line-height: 1.5; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .logo-loader::before { animation: none; } .open-map { transition: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="logo-loader">
+      <img src="./logo.png" alt="Logo de El Armario del Michi" width="545" height="545" fetchpriority="high">
+    </div>
+    <p class="brand">El Armario del Michi</p>
+    <h1>Nos vemos en la tienda</h1>
+    <p class="status" id="status" role="status" aria-live="polite">Abre el mapa para encontrarnos.</p>
+    <div class="destination">
+      <strong>Urban Look</strong>
+      <address>Calle de Armenta y López 509-A<br>OAX_RE_BENITO JUAREZ, Centro<br>68000 Oaxaca de Juárez, Oax.</address>
+    </div>
+    <a class="open-map" id="open-map" href="https://maps.app.goo.gl/xCcowGGiJvYdtcc48">Abrir en Google Maps</a>
+    <a class="other-map" id="other-map" href="https://maps.apple.com/?q=Urban%20Look&amp;address=Calle%20de%20Armenta%20y%20L%C3%B3pez%20509-A%2C%20OAX_RE_BENITO%20JUAREZ%2C%20Centro%2C%2068000%20Oaxaca%20de%20Ju%C3%A1rez%2C%20Oax.%2C%20M%C3%A9xico">Abrir en Apple Maps</a>
+    <noscript><p>Elige uno de los mapas para ver nuestra ubicación.</p></noscript>
+  </main>
+  <script>
+    (() => {
+      const primary = document.getElementById('open-map');
+      const alternative = document.getElementById('other-map');
+      const status = document.getElementById('status');
+      const googleMaps = primary.href;
+      const appleMaps = alternative.href;
+      const userAgent = navigator.userAgent || '';
+      const platform = navigator.userAgentData?.platform || navigator.platform || '';
+      // iPadOS can identify itself as a Mac when requesting desktop websites.
+      const isIPad = /Mac/i.test(platform) && navigator.maxTouchPoints > 1;
+      const isApple = !/Android/i.test(userAgent) &&
+        (/iPhone|iPad|iPod|Macintosh|Mac OS X/i.test(userAgent) || /Mac|iOS/i.test(platform) || isIPad);
+      const service = isApple ? 'Apple Maps' : 'Google Maps';
+      const destination = isApple ? appleMaps : googleMaps;
+      primary.href = destination;
+      primary.textContent = `Abrir en ${service}`;
+      alternative.href = isApple ? googleMaps : appleMaps;
+      alternative.textContent = `Abrir en ${isApple ? 'Google Maps' : 'Apple Maps'}`;
+      status.textContent = `Estamos abriendo la ubicación de la tienda en ${service}…`;
+
+      let redirectTimer;
+      let fallbackTimer;
+      let attempted = false;
+
+      function showFallback() {
+        clearTimeout(redirectTimer);
+        clearTimeout(fallbackTimer);
+        document.body.classList.add('is-idle');
+        status.textContent = 'Si el mapa no se abrió, toca el botón para continuar.';
+      }
+
+      function openMap() {
+        if (attempted || document.hidden) return;
+        attempted = true;
+        fallbackTimer = setTimeout(showFallback, 3500);
+        try {
+          // HTTPS links let the device open its app or fall back to the web map.
+          window.location.replace(destination);
+        } catch {
+          showFallback();
+        }
+      }
+
+      function scheduleRedirect() {
+        if (attempted || document.hidden) return;
+        clearTimeout(redirectTimer);
+        redirectTimer = setTimeout(openMap, 1800);
+      }
+
+      // Keep the logo visible briefly after assets finish loading.
+      if (document.readyState === 'complete') scheduleRedirect();
+      else window.addEventListener('load', scheduleRedirect, { once: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(redirectTimer);
+        else if (attempted) showFallback();
+        else scheduleRedirect();
+      });
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted) { attempted = true; showFallback(); }
+      });
+      [primary, alternative].forEach((link) => link.addEventListener('click', () => {
+        attempted = true;
+        showFallback();
+      }));
+    })();
+  </script>
+</body>
+</html>
