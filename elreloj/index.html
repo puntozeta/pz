@@ -710,7 +710,9 @@
        CONFIGURACIÓN
        ===================================== */
 
-    const PDF_URL = "./elreloj.pdf";
+    const PDF_URL = new URL("./elreloj.pdf", document.baseURI).href;
+
+console.log("URL del PDF:", PDF_URL);
 
 
     /* =====================================
