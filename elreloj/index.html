@@ -1425,56 +1425,84 @@ console.log("URL del PDF:", PDF_URL);
 
     async function loadPdf() {
 
-      try {
+  try {
 
-        loading.classList.remove(
-          "hidden"
-        );
+    loading.classList.remove("hidden");
+    error.classList.add("hidden");
 
+    console.log("Intentando cargar:", PDF_URL);
 
-        error.classList.add(
-          "hidden"
-        );
+    const response = await fetch(PDF_URL, {
+      cache: "no-store"
+    });
 
+    console.log("HTTP:", response.status);
+    console.log(
+      "Content-Type:",
+      response.headers.get("content-type")
+    );
 
-        pdf =
-          await pdfjsLib
-            .getDocument(PDF_URL)
-            .promise;
-
-
-        pageCount.textContent =
-          pdf.numPages;
-
-
-        loading.classList.add(
-          "hidden"
-        );
-
-
-        await renderPage();
-
-
-      } catch (err) {
-
-        console.error(
-          "Error cargando PDF:",
-          err
-        );
-
-
-        loading.classList.add(
-          "hidden"
-        );
-
-
-        error.classList.remove(
-          "hidden"
-        );
-
-      }
-
+    if (!response.ok) {
+      throw new Error(
+        `El PDF respondió HTTP ${response.status}`
+      );
     }
+
+    const data =
+      await response.arrayBuffer();
+
+    console.log(
+      "PDF descargado:",
+      data.byteLength,
+      "bytes"
+    );
+
+    pdf =
+      await pdfjsLib
+        .getDocument({
+          data
+        })
+        .promise;
+
+    console.log(
+      "PDF cargado correctamente:",
+      pdf.numPages,
+      "páginas"
+    );
+
+    pageCount.textContent =
+      pdf.numPages;
+
+    pageInput.max =
+      pdf.numPages;
+
+    loading.classList.add("hidden");
+
+    await renderPage();
+
+  } catch (err) {
+
+    console.error(
+      "Error cargando PDF:",
+      err
+    );
+
+    loading.classList.add("hidden");
+    error.classList.remove("hidden");
+
+    const errorText =
+      error.querySelector("p");
+
+    if (errorText) {
+      errorText.textContent =
+        `No se pudo cargar el catálogo: ${
+          err?.message || "Error desconocido"
+        }`;
+    }
+
+  }
+
+}
 
 
     loadPdf();
