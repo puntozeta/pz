@@ -2,17 +2,12 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
-
-  <!-- =====================================
-       INFORMACIÓN GENERAL
-       ===================================== -->
 
   <title>El Reloj Sibarita</title>
 
@@ -21,11 +16,7 @@
     content="PRODUCTOS DE LA MIXTECA OAXAQUEÑA. Venta de chocolate artesanal semiamargo. PUNTOZETA SOLUCIONES DIGITALES"
   >
 
-
-  <!-- =====================================
-       OPEN GRAPH
-       ===================================== -->
-
+  <!-- Open Graph -->
   <meta
     property="og:title"
     content="El Reloj Sibarita"
@@ -56,11 +47,7 @@
     content="https://puntozeta.github.io/pz/elreloj/"
   >
 
-
-  <!-- =====================================
-       TWITTER / X
-       ===================================== -->
-
+  <!-- Twitter / X -->
   <meta
     name="twitter:card"
     content="summary_large_image"
@@ -81,27 +68,18 @@
     content="https://puntozetasd.wordpress.com/wp-content/uploads/2025/04/sumatrapdf_ooyrdgptzp.png"
   >
 
-
-  <!-- =====================================
-       FAVICON
-       ===================================== -->
-
+  <!-- Favicon -->
   <link
     rel="icon"
     type="image/png"
     href="./assets/elrelojlogo.png"
   >
 
-
   <meta
     name="theme-color"
-    content="#111111"
+    content="#1f1f1f"
   >
 
-
-  <!-- =====================================
-       ESTILOS
-       ===================================== -->
 
   <style>
 
@@ -116,17 +94,11 @@
       margin: 0;
 
       width: 100%;
-
       height: 100%;
-
-      background: #1f1f1f;
 
       overflow: hidden;
 
-    }
-
-
-    body {
+      background: #1f1f1f;
 
       font-family:
         system-ui,
@@ -139,8 +111,7 @@
 
 
     /*
-      El visor ocupa prácticamente
-      toda la pantalla disponible.
+      El visor utiliza toda la pantalla.
     */
 
     #pdf-viewer {
@@ -150,25 +121,42 @@
       height: 100vh;
       height: 100dvh;
 
+      opacity: 0;
+
+      transition:
+        opacity .15s ease;
+
+    }
+
+
+    #pdf-viewer.ready {
+
+      opacity: 1;
+
     }
 
 
     /*
-      Fallback por si JavaScript tarda
-      unos instantes en inicializar.
+      Pantalla inicial de carga.
     */
 
-    .loading {
+    #loading {
 
       position: fixed;
 
       inset: 0;
 
+      z-index: 1000;
+
       display: flex;
+
+      flex-direction: column;
 
       align-items: center;
 
       justify-content: center;
+
+      gap: 14px;
 
       background: #1f1f1f;
 
@@ -176,7 +164,41 @@
 
       font-size: 14px;
 
-      z-index: -1;
+    }
+
+
+    #loading.hidden {
+
+      display: none;
+
+    }
+
+
+    .spinner {
+
+      width: 34px;
+      height: 34px;
+
+      border:
+        3px solid
+        rgba(255,255,255,.2);
+
+      border-top-color:
+        white;
+
+      border-radius: 50%;
+
+      animation:
+        spin .7s linear infinite;
+
+    }
+
+
+    @keyframes spin {
+
+      to {
+        transform: rotate(360deg);
+      }
 
     }
 
@@ -188,283 +210,692 @@
 <body>
 
 
-  <!-- =====================================
-       FALLBACK DE CARGA
-       ===================================== -->
+  <!-- ================================
+       CARGANDO
+       ================================ -->
 
-  <div class="loading">
-    Cargando catálogo...
+  <div id="loading">
+
+    <div class="spinner"></div>
+
+    <span>
+      Cargando catálogo...
+    </span>
+
   </div>
 
 
-  <!-- =====================================
+  <!-- ================================
        VISOR
-       ===================================== -->
+       ================================ -->
 
   <div id="pdf-viewer"></div>
 
 
-  <!-- =====================================
+  <!-- ================================
        EMBEDPDF
-       ===================================== -->
-<script type="module">
+       ================================ -->
 
-  import EmbedPDF, { ZoomMode } from
-    "https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2.15.1/dist/embedpdf.js";
+  <script type="module">
+
+    import EmbedPDF, { ZoomMode } from
+      "https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2.15.1/dist/embedpdf.js";
 
 
-  const viewer = EmbedPDF.init({
-
-    type: "container",
-
-    target:
+    const pdfViewer =
       document.getElementById(
         "pdf-viewer"
-      ),
-
-    src: "./elreloj.pdf",
-
-
-    /* =====================================
-       SOLO UN DOCUMENTO
-       ===================================== */
-
-    tabBar: "never",
-
-
-    /* =====================================
-       TEMA
-       ===================================== */
-
-    theme: {
-      preference: "dark"
-    },
-
-
-    /* =====================================
-       VISUALIZACIÓN
-       ===================================== */
-
-    zoom: {
-
-      defaultZoomLevel:
-        ZoomMode.FitWidth,
-
-      minZoom: 0.5,
-
-      maxZoom: 3
-
-    },
-
-
-    /* =====================================
-       NAVEGACIÓN
-       ===================================== */
-
-    scroll: {
-
-      defaultStrategy: "vertical",
-
-      defaultPageGap: 10
-
-    },
-
-
-    /* =====================================
-       OCULTAR HERRAMIENTAS
-       SIN DESACTIVAR LOS LINKS
-       ===================================== */
-
-    disabledCategories: [
-
-      /*
-        IMPORTANTE:
-
-        NO incluir:
-        "annotation"
-
-        porque desactivaría también
-        la interacción de las anotaciones
-        del PDF.
-      */
-
-
-      /* Marcadores */
-
-      "annotation-markup",
-
-      "annotation-highlight",
-
-      "annotation-underline",
-
-      "annotation-strikeout",
-
-      "annotation-squiggly",
-
-
-      /* Dibujar */
-
-      "annotation-ink",
-
-
-      /* Texto y notas */
-
-      "annotation-text",
-
-
-      /* Sellos */
-
-      "annotation-stamp",
-
-
-      /* Formas */
-
-      "annotation-shape",
-
-      "annotation-rectangle",
-
-      "annotation-circle",
-
-      "annotation-line",
-
-      "annotation-arrow",
-
-      "annotation-polygon",
-
-      "annotation-polyline",
-
-
-      /* Formularios */
-
-      "form",
-
-
-      /* Redacción */
-
-      "redaction",
-
-
-      /* Insertar elementos */
-
-      "insert",
-
-
-      /* Historial */
-
-      "history",
-
-
-      /* Paneles laterales */
-
-      "panel",
-
-
-      /* Vista doble */
-
-      "spread",
-
-
-      /* Rotación */
-
-      "rotate",
-
-
-      /* Captura */
-
-      "capture",
-
-
-      /* Abrir otro PDF */
-
-      "document-open",
-
-
-      /* Cerrar documento */
-
-      "document-close",
-
-
-      /* Imprimir */
-
-      "document-print",
-
-
-      /* Descargar / exportar */
-
-      "document-export",
-
-
-      /* Protección */
-
-      "document-protect",
-
-
-      /* Captura de documento */
-
-      "document-capture",
-
-
-      /* UI de seguridad */
-
-      "security",
-
-
-      /*
-        Quitamos solamente zoom avanzado.
-
-        NO quitamos completamente "zoom"
-        porque queremos conservar pinch,
-        ctrl + rueda, etc.
-      */
-
-      "zoom-marquee"
-
-    ]
-
-  });
-
-
-  viewer.registry
-    .then(registry => {
-
-      console.log(
-        "Visor listo"
       );
 
 
-      /*
-        Dejamos el sistema de anotaciones
-        en modo cursor/selección normal.
-
-        Esto es importante para permitir
-        interacción con links existentes.
-      */
-
-      const annotationPlugin =
-        registry
-          .getPlugin("annotation")
-          ?.provides();
+    const loading =
+      document.getElementById(
+        "loading"
+      );
 
 
-      if (annotationPlugin) {
+    /* =================================
+       CREAR VISOR
+       ================================= */
 
-        annotationPlugin.setActiveTool(
-          null
+    const viewer =
+      EmbedPDF.init({
+
+        type: "container",
+
+        target:
+          pdfViewer,
+
+        src:
+          "./elreloj.pdf",
+
+
+        /*
+          No mostrar pestañas de documentos.
+        */
+
+        tabBar:
+          "never",
+
+
+        /*
+          Tema oscuro.
+        */
+
+        theme: {
+
+          preference:
+            "dark"
+
+        },
+
+
+        /*
+          Ajustamos cada página
+          al ancho de pantalla.
+        */
+
+        zoom: {
+
+          defaultZoomLevel:
+            ZoomMode.FitWidth,
+
+          minZoom:
+            0.5,
+
+          maxZoom:
+            3
+
+        },
+
+
+        /*
+          Catálogo continuo vertical.
+        */
+
+        scroll: {
+
+          defaultStrategy:
+            "vertical",
+
+          defaultPageGap:
+            8
+
+        },
+
+
+        /*
+          No necesitamos herramienta
+          de arrastre activa por defecto.
+        */
+
+        pan: {
+
+          defaultMode:
+            "never"
+
+        },
+
+
+        /*
+          PDF en modo lectura.
+
+          modifyAnnotations false impide
+          modificar o eliminar anotaciones.
+
+          Los enlaces existentes siguen
+          formando parte del documento.
+        */
+
+        permissions: {
+
+          overrides: {
+
+            print:
+              false,
+
+            printHighQuality:
+              false,
+
+            modifyContents:
+              false,
+
+            modifyAnnotations:
+              false,
+
+            fillForms:
+              false
+
+          }
+
+        },
+
+
+        /*
+          Deshabilitamos toda la UI
+          que no necesitamos.
+
+          IMPORTANTE:
+          NO ponemos "annotation",
+          porque los hipervínculos del
+          PDF dependen de esa infraestructura.
+        */
+
+        disabledCategories: [
+
+          /* Edición de anotaciones */
+
+          "annotation-markup",
+
+          "annotation-highlight",
+
+          "annotation-underline",
+
+          "annotation-strikeout",
+
+          "annotation-squiggly",
+
+          "annotation-ink",
+
+          "annotation-text",
+
+          "annotation-stamp",
+
+          "annotation-shape",
+
+          "annotation-rectangle",
+
+          "annotation-circle",
+
+          "annotation-line",
+
+          "annotation-arrow",
+
+          "annotation-polygon",
+
+          "annotation-polyline",
+
+
+          /* Formularios */
+
+          "form",
+
+
+          /* Redacción */
+
+          "redaction",
+
+
+          /* Insertar elementos */
+
+          "insert",
+
+
+          /* Historial */
+
+          "history",
+
+
+          /* Paneles */
+
+          "panel",
+
+
+          /* Vista doble */
+
+          "spread",
+
+
+          /* Rotación */
+
+          "rotate",
+
+
+          /* Capturas */
+
+          "capture",
+
+
+          /* Abrir / cerrar documentos */
+
+          "document-open",
+
+          "document-close",
+
+
+          /* Impresión */
+
+          "document-print",
+
+
+          /* Exportar / descargar */
+
+          "document-export",
+
+
+          /* Pantalla completa propia */
+
+          "document-fullscreen",
+
+
+          /* Protección */
+
+          "document-protect",
+
+
+          /* Seguridad visual */
+
+          "security",
+
+
+          /* Herramientas especiales */
+
+          "zoom-marquee"
+
+        ]
+
+      });
+
+
+    /* =================================
+       PERSONALIZAR UI
+       ================================= */
+
+    async function configureViewer() {
+
+      try {
+
+        const registry =
+          await viewer.registry;
+
+
+        const ui =
+          registry
+            .getPlugin("ui")
+            ?.provides();
+
+
+        /*
+          Dejamos la toolbar completamente
+          vacía.
+
+          Así desaparecen:
+          menú, View, +, búsqueda, etc.
+        */
+
+        if (ui) {
+
+          const schema =
+            ui.getSchema();
+
+
+          const toolbar =
+            schema
+              .toolbars
+              ?.
+              ["main-toolbar"];
+
+
+          if (toolbar) {
+
+            ui.mergeSchema({
+
+              toolbars: {
+
+                "main-toolbar": {
+
+                  ...toolbar,
+
+                  items: []
+
+                }
+
+              }
+
+            });
+
+          }
+
+        }
+
+
+        /*
+          Dejamos Annotation en cursor
+          normal para poder interactuar
+          con links existentes.
+        */
+
+        const annotation =
+          registry
+            .getPlugin("annotation")
+            ?.provides();
+
+
+        if (annotation) {
+
+          annotation.setActiveTool(
+            null
+          );
+
+        }
+
+
+        /*
+          Mostrar visor solamente después
+          de haber quitado la toolbar.
+        */
+
+        pdfViewer.classList.add(
+          "ready"
+        );
+
+
+        loading.classList.add(
+          "hidden"
+        );
+
+
+      } catch (err) {
+
+        console.error(
+          "Error configurando visor:",
+          err
+        );
+
+
+        pdfViewer.classList.add(
+          "ready"
+        );
+
+
+        loading.classList.add(
+          "hidden"
         );
 
       }
 
-    })
-    .catch(error => {
+    }
 
-      console.error(
-        "Error iniciando EmbedPDF:",
-        error
+
+    configureViewer();
+
+
+    /* =================================
+       ABRIR LINKS AUTOMÁTICAMENTE
+       =================================
+
+       EmbedPDF v2 selecciona primero la
+       anotación y muestra "Go to Link".
+
+       Este código detecta esa opción y la
+       ejecuta inmediatamente para que:
+
+       tocar enlace
+            ↓
+       abrir URL
+
+       sin intervención adicional.
+       ================================= */
+
+
+    let linkInteractionActive =
+      false;
+
+
+    pdfViewer.addEventListener(
+      "pointerup",
+      () => {
+
+        linkInteractionActive =
+          true;
+
+
+        /*
+          Ventana temporal suficiente para
+          que EmbedPDF cree su menú.
+        */
+
+        window.setTimeout(
+          () => {
+
+            linkInteractionActive =
+              false;
+
+          },
+          1000
+        );
+
+      },
+      true
+    );
+
+
+    /*
+      Buscar también dentro de Shadow DOM
+      en caso de que EmbedPDF lo utilice.
+    */
+
+    function getSearchRoots() {
+
+      const roots =
+        [document];
+
+
+      const walk =
+        root => {
+
+          const elements =
+            root.querySelectorAll
+              ? root.querySelectorAll("*")
+              : [];
+
+
+          for (
+            const element
+            of elements
+          ) {
+
+            if (
+              element.shadowRoot
+            ) {
+
+              roots.push(
+                element.shadowRoot
+              );
+
+
+              walk(
+                element.shadowRoot
+              );
+
+            }
+
+          }
+
+        };
+
+
+      walk(document);
+
+
+      return roots;
+
+    }
+
+
+    function normalizeText(
+      element
+    ) {
+
+      return (
+        element?.textContent ||
+        ""
+      )
+        .trim()
+        .replace(
+          /\s+/g,
+          " "
+        )
+        .toLowerCase();
+
+    }
+
+
+    function executeGoToLink() {
+
+      if (
+        !linkInteractionActive
+      ) {
+
+        return;
+
+      }
+
+
+      const roots =
+        getSearchRoots();
+
+
+      for (
+        const root
+        of roots
+      ) {
+
+        const elements =
+          root.querySelectorAll(
+            [
+              "button",
+              "[role='button']",
+              "[role='menuitem']"
+            ].join(",")
+          );
+
+
+        for (
+          const element
+          of elements
+        ) {
+
+          const text =
+            normalizeText(
+              element
+            );
+
+
+          const isLinkCommand =
+            text.includes(
+              "go to link"
+            )
+            ||
+            text.includes(
+              "ir al enlace"
+            )
+            ||
+            text.includes(
+              "abrir enlace"
+            );
+
+
+          if (
+            !isLinkCommand
+          ) {
+
+            continue;
+
+          }
+
+
+          /*
+            Evitar ejecución duplicada.
+          */
+
+          if (
+            element.dataset
+              .autoLinkExecuted ===
+            "true"
+          ) {
+
+            continue;
+
+          }
+
+
+          element.dataset
+            .autoLinkExecuted =
+            "true";
+
+
+          /*
+            Ocultamos el menú antes de
+            ejecutar el enlace.
+          */
+
+          const menu =
+            element.closest(
+              "[role='menu']"
+            )
+            ||
+            element.parentElement;
+
+
+          if (menu) {
+
+            menu.style.visibility =
+              "hidden";
+
+          }
+
+
+          linkInteractionActive =
+            false;
+
+
+          /*
+            Ejecutar acción nativa
+            de EmbedPDF.
+          */
+
+          element.click();
+
+
+          return;
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      EmbedPDF crea el menú de enlace
+      dinámicamente.
+    */
+
+    const observer =
+      new MutationObserver(
+        () => {
+
+          executeGoToLink();
+
+        }
       );
 
-    });
 
-</script>
+    observer.observe(
+      document.documentElement,
+      {
+
+        childList:
+          true,
+
+        subtree:
+          true
+
+      }
+    );
+
+  </script>
 
 
 </body>
