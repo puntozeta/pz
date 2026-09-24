@@ -210,120 +210,200 @@
 
   <script type="module">
 
-    import EmbedPDF from
-      "https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js";
+  import EmbedPDF, { ZoomMode } from
+    "https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js";
 
 
-    /*
-      Inicializamos el visor.
+  const viewer = EmbedPDF.init({
 
-      El PDF está junto al index.html,
-      por lo tanto usamos:
+    type: "container",
 
-      ./elreloj.pdf
-    */
+    target: document.getElementById(
+      "pdf-viewer"
+    ),
 
-    const viewer =
-      EmbedPDF.init({
+    src: "./elreloj.pdf",
 
-        type: "container",
 
-        target:
-          document.getElementById(
-            "pdf-viewer"
-          ),
+    /* =====================================
+       SOLO UN DOCUMENTO
+       ===================================== */
 
-        src:
-          "./elreloj.pdf",
+    tabBar: "never",
 
+
+    /* =====================================
+       TEMA
+       ===================================== */
+
+    theme: {
+      preference: "dark"
+    },
+
+
+    /* =====================================
+       VISUALIZACIÓN
+       ===================================== */
+
+    zoom: {
+
+      /*
+        Muestra la página completa
+        aprovechando el espacio disponible.
+      */
+
+      defaultZoomLevel:
+        ZoomMode.FitPage,
+
+      minZoom: 0.5,
+
+      maxZoom: 3
+
+    },
+
+
+    /* =====================================
+       NAVEGACIÓN
+       ===================================== */
+
+    scroll: {
+
+      /*
+        Permite recorrer normalmente
+        las páginas del catálogo.
+      */
+
+      defaultStrategy: "vertical",
+
+      defaultPageGap: 10
+
+    },
+
+
+    /* =====================================
+       PERMISOS
+       ===================================== */
+
+    permissions: {
+
+      overrides: {
 
         /*
-          Tema.
-
-          Puedes cambiar "dark" por:
-
-          "light"
-          "system"
+          El usuario solamente visualiza.
         */
 
-        theme: {
-          preference: "dark"
-        },
+        print: false,
+
+        printHighQuality: false,
+
+        modifyContents: false,
+
+        modifyAnnotations: false,
+
+        fillForms: false
+
+      }
+
+    },
 
 
-        /*
-          No necesitamos pestañas porque
-          solamente mostramos un catálogo.
-        */
+    /* =====================================
+       OCULTAR HERRAMIENTAS INNECESARIAS
+       ===================================== */
 
-        tabBar: "never",
+    disabledCategories: [
+
+      /* Edición / anotaciones */
+      "annotation",
+
+      /* Formularios */
+      "form",
+
+      /* Redacción */
+      "redaction",
+
+      /* Insertar contenido */
+      "insert",
+
+      /* Historial de edición */
+      "history",
+
+      /* Paneles laterales */
+      "panel",
+
+      /* Diseños múltiples */
+      "spread",
+
+      /* Rotación */
+      "rotate",
+
+      /* Capturas */
+      "capture",
+
+      /* Impresión */
+      "document-print",
+
+      /* Exportar / descargar */
+      "document-export",
+
+      /* Abrir otro PDF */
+      "document-open",
+
+      /* Cerrar documento */
+      "document-close",
+
+      /* Protección */
+      "document-protect",
+
+      /* Captura de documento */
+      "document-capture",
+
+      /* UI de seguridad */
+      "security",
+
+      /*
+        Quitamos las opciones avanzadas
+        de zoom de la toolbar.
+
+        El PDF sigue iniciando en FitPage.
+      */
+
+      "zoom",
+
+      /*
+        NO ponemos:
+
+        "navigation"
+        "scroll"
+        "page"
+
+        porque esas son precisamente
+        las funciones que queremos conservar.
+      */
+
+    ]
+
+  });
 
 
-        /*
-          Quitamos herramientas innecesarias
-          para un catálogo.
+  viewer.registry
+    .then(() => {
 
-          export:
-          elimina la funcionalidad de
-          exportar/descargar desde la UI.
+      console.log(
+        "Visor de catálogo listo"
+      );
 
-          print:
-          elimina impresión.
+    })
+    .catch(error => {
 
-          annotation:
-          elimina herramientas para dibujar,
-          resaltar, agregar notas, etc.
+      console.error(
+        "Error iniciando EmbedPDF:",
+        error
+      );
 
-          redaction:
-          elimina herramientas de censura.
+    });
 
-          insert:
-          elimina inserción de imágenes,
-          firmas, etc.
-        */
-
-        disabledCategories: [
-
-          "annotation",
-
-          "print",
-
-          "export",
-
-          "redaction",
-
-          "insert"
-
-        ]
-
-      });
-
-
-    /*
-      Opcional:
-
-      Esto solamente confirma en consola
-      que EmbedPDF inició correctamente.
-    */
-
-    viewer.registry
-      .then(() => {
-
-        console.log(
-          "Catálogo cargado con EmbedPDF"
-        );
-
-      })
-      .catch(error => {
-
-        console.error(
-          "Error iniciando EmbedPDF:",
-          error
-        );
-
-      });
-
-  </script>
+</script>
 
 
 </body>
