@@ -7,37 +7,222 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
   <title>El Reloj Sibarita</title>
 
+  <meta
+    name="description"
+    content="PRODUCTOS DE LA MIXTECA OAXAQUEÑA. Venta de chocolate artesanal semiamargo. PUNTOZETA SOLUCIONES DIGITALES"
+  >
+
+  <!-- Open Graph -->
+
+  <meta
+    property="og:title"
+    content="El Reloj Sibarita"
+  >
+
+  <meta
+    property="og:description"
+    content="PRODUCTOS DE LA MIXTECA OAXAQUEÑA. Venta de chocolate artesanal semiamargo. PUNTOZETA SOLUCIONES DIGITALES"
+  >
+
+  <meta
+    property="og:image"
+    content="https://puntozetasd.wordpress.com/wp-content/uploads/2025/04/sumatrapdf_ooyrdgptzp.png"
+  >
+
+  <meta
+    property="og:image:alt"
+    content="Catálogo de El Reloj Sibarita"
+  >
+
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+
+  <!-- Twitter / X -->
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+
+  <meta
+    name="twitter:title"
+    content="El Reloj Sibarita"
+  >
+
+  <meta
+    name="twitter:description"
+    content="PRODUCTOS DE LA MIXTECA OAXAQUEÑA. Venta de chocolate artesanal semiamargo."
+  >
+
+  <meta
+    name="twitter:image"
+    content="https://puntozetasd.wordpress.com/wp-content/uploads/2025/04/sumatrapdf_ooyrdgptzp.png"
+  >
+
+
+  <!-- Favicon -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./assets/elrelojlogo.png"
+  >
+
+  <meta
+    name="theme-color"
+    content="#202124"
+  >
+
+
   <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
 
     html,
     body {
+
       margin: 0;
+
       width: 100%;
       height: 100%;
+
       overflow: hidden;
+
       background: #202124;
+
     }
 
-    pdfjs-viewer-element {
+
+    body {
+
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    }
+
+
+    /* ==========================================
+       VISOR
+       ========================================== */
+
+    #pdfViewer {
+
       display: block;
+
       width: 100%;
+
       height: 100vh;
       height: 100dvh;
+
+      background: #202124;
+
+    }
+
+
+    /* ==========================================
+       INDICADOR DE PÁGINA
+       ========================================== */
+
+    #pageIndicator {
+
+      position: fixed;
+
+      left: 50%;
+
+      bottom:
+        calc(
+          16px + env(safe-area-inset-bottom)
+        );
+
+      transform:
+        translateX(-50%);
+
+      z-index: 9999;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      min-width: 62px;
+
+      height: 34px;
+
+      padding:
+        0 12px;
+
+      border-radius: 17px;
+
+      background:
+        rgba(20, 20, 20, 0.78);
+
+      color: #ffffff;
+
+      font-size: 13px;
+
+      font-weight: 500;
+
+      line-height: 1;
+
+      white-space: nowrap;
+
+      pointer-events: none;
+
+      user-select: none;
+
+      -webkit-user-select: none;
+
+      backdrop-filter:
+        blur(8px);
+
+      -webkit-backdrop-filter:
+        blur(8px);
+
+    }
+
+
+    /*
+      Mientras todavía no sabemos
+      cuántas páginas tiene el PDF.
+    */
+
+    #pageIndicator:empty {
+
+      display: none;
+
     }
 
   </style>
 
 </head>
 
+
 <body>
 
 
+  <!-- ==========================================
+       VISOR PDF
+       ========================================== -->
+
   <pdfjs-viewer-element
+
+    id="pdfViewer"
 
     src="./elreloj.pdf"
 
@@ -54,9 +239,420 @@
   ></pdfjs-viewer-element>
 
 
+  <!-- ==========================================
+       NUMERADOR
+       ========================================== -->
+
+  <div
+    id="pageIndicator"
+    aria-live="polite"
+  ></div>
+
+
+  <!-- ==========================================
+       PDFJS VIEWER ELEMENT
+       ========================================== -->
+
   <script
     type="module"
     src="https://cdn.jsdelivr.net/npm/pdfjs-viewer-element@4/dist/pdfjs-viewer-element.js">
+  </script>
+
+
+  <!-- ==========================================
+       CONFIGURACIÓN
+       ========================================== -->
+
+  <script type="module">
+
+
+    /* ==========================================
+       REFERENCIAS
+       ========================================== */
+
+    const viewer =
+      document.getElementById(
+        "pdfViewer"
+      );
+
+
+    const pageIndicator =
+      document.getElementById(
+        "pageIndicator"
+      );
+
+
+    /* ==========================================
+       ESPERAR COMPONENTE
+       ========================================== */
+
+    await customElements.whenDefined(
+      "pdfjs-viewer-element"
+    );
+
+
+    /* ==========================================
+       OCULTAR INTERFAZ DE PDF.JS
+       ========================================== */
+
+    await viewer.injectViewerStyles(`
+
+
+      /* ========================================
+         TOOLBAR COMPLETA
+         ======================================== */
+
+      #toolbarContainer {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         SIDEBAR
+         ======================================== */
+
+      #sidebarContainer {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         BOTÓN DEL SIDEBAR
+         ======================================== */
+
+      #sidebarToggleButton {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         TOOLBAR SECUNDARIA
+         ======================================== */
+
+      #secondaryToolbar {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         BUSCADOR
+         ======================================== */
+
+      #findbar {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         PASSWORD / DIÁLOGOS
+         ======================================== */
+
+      #passwordDialog {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         EDITORES
+         ======================================== */
+
+      #editorModeButtons,
+
+      #editorHighlight,
+
+      #editorFreeText,
+
+      #editorInk,
+
+      #editorStamp,
+
+      #editorSignature {
+
+        display: none !important;
+
+      }
+
+
+      /* ========================================
+         HACER QUE EL PDF OCUPE TODO
+         EL ESPACIO DISPONIBLE
+         ======================================== */
+
+      #mainContainer {
+
+        top: 0 !important;
+
+        left: 0 !important;
+
+        right: 0 !important;
+
+        bottom: 0 !important;
+
+      }
+
+
+      #viewerContainer {
+
+        top: 0 !important;
+
+        left: 0 !important;
+
+        right: 0 !important;
+
+        bottom: 0 !important;
+
+        background:
+          #202124 !important;
+
+      }
+
+
+      /* ========================================
+         PÁGINAS
+         ======================================== */
+
+      .pdfViewer {
+
+        padding-top:
+          4px !important;
+
+        padding-bottom:
+          55px !important;
+
+      }
+
+
+      .pdfViewer .page {
+
+        margin:
+          4px auto !important;
+
+      }
+
+
+      /* ========================================
+         HIPERVÍNCULOS
+
+         MUY IMPORTANTE:
+         No ocultamos annotationLayer.
+         ======================================== */
+
+      .annotationLayer {
+
+        pointer-events:
+          auto !important;
+
+      }
+
+
+      .annotationLayer
+      .linkAnnotation {
+
+        pointer-events:
+          auto !important;
+
+      }
+
+
+      .annotationLayer
+      .linkAnnotation > a {
+
+        cursor:
+          pointer !important;
+
+        pointer-events:
+          auto !important;
+
+      }
+
+
+    `);
+
+
+    /* ==========================================
+       ESPERAR PDF.JS
+       ========================================== */
+
+    try {
+
+
+      const {
+
+        viewerApp
+
+      } =
+        await viewer.initPromise;
+
+
+
+      /* ========================================
+         CERRAR SIDEBAR
+         ======================================== */
+
+      try {
+
+        viewerApp.pdfSidebar
+          ?.close();
+
+      }
+      catch (_) {}
+
+
+      /* ========================================
+         EVENT BUS DE PDF.JS
+         ======================================== */
+
+      const eventBus =
+        viewerApp.eventBus;
+
+
+
+      /* ========================================
+         ACTUALIZAR NUMERADOR
+         ======================================== */
+
+      function updatePageIndicator(
+        pageNumber,
+        pagesCount
+      ) {
+
+
+        if (
+          !pageNumber ||
+          !pagesCount
+        ) {
+
+          return;
+
+        }
+
+
+        pageIndicator.textContent =
+          `${pageNumber} / ${pagesCount}`;
+
+      }
+
+
+
+      /* ========================================
+         CUANDO EL PDF TERMINE DE CARGAR
+         ======================================== */
+
+      eventBus.on(
+        "pagesloaded",
+        event => {
+
+
+          const currentPage =
+            viewerApp.pdfViewer
+              ?.currentPageNumber
+            || 1;
+
+
+          const totalPages =
+            event.pagesCount
+            ||
+            viewerApp.pagesCount
+            ||
+            viewerApp.pdfDocument
+              ?.numPages;
+
+
+          updatePageIndicator(
+            currentPage,
+            totalPages
+          );
+
+
+      });
+
+
+
+      /* ========================================
+         CUANDO CAMBIE LA PÁGINA
+         ======================================== */
+
+      eventBus.on(
+        "pagechanging",
+        event => {
+
+
+          const currentPage =
+            event.pageNumber;
+
+
+          const totalPages =
+            viewerApp.pagesCount
+            ||
+            viewerApp.pdfDocument
+              ?.numPages;
+
+
+          updatePageIndicator(
+            currentPage,
+            totalPages
+          );
+
+
+      });
+
+
+
+      /* ========================================
+         RESPALDO POR SI EL PDF YA ESTABA
+         CARGADO ANTES DE REGISTRAR EVENTOS
+         ======================================== */
+
+      if (
+        viewerApp.pdfDocument
+      ) {
+
+
+        updatePageIndicator(
+
+          viewerApp.pdfViewer
+            ?.currentPageNumber
+          || 1,
+
+          viewerApp.pdfDocument
+            .numPages
+
+        );
+
+
+      }
+
+
+      console.log(
+        "Catálogo listo"
+      );
+
+
+    }
+    catch (error) {
+
+
+      console.error(
+        "Error inicializando visor:",
+        error
+      );
+
+
+    }
+
+
   </script>
 
 
