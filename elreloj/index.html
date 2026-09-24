@@ -207,20 +207,20 @@
   <!-- =====================================
        EMBEDPDF
        ===================================== -->
-
-  <script type="module">
+<script type="module">
 
   import EmbedPDF, { ZoomMode } from
-    "https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js";
+    "https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2.15.1/dist/embedpdf.js";
 
 
   const viewer = EmbedPDF.init({
 
     type: "container",
 
-    target: document.getElementById(
-      "pdf-viewer"
-    ),
+    target:
+      document.getElementById(
+        "pdf-viewer"
+      ),
 
     src: "./elreloj.pdf",
 
@@ -247,13 +247,8 @@
 
     zoom: {
 
-      /*
-        Muestra la página completa
-        aprovechando el espacio disponible.
-      */
-
       defaultZoomLevel:
-        ZoomMode.FitPage,
+        ZoomMode.FitWidth,
 
       minZoom: 0.5,
 
@@ -268,11 +263,6 @@
 
     scroll: {
 
-      /*
-        Permite recorrer normalmente
-        las páginas del catálogo.
-      */
-
       defaultStrategy: "vertical",
 
       defaultPageGap: 10
@@ -281,105 +271,153 @@
 
 
     /* =====================================
-       PERMISOS
-       ===================================== */
-
-    permissions: {
-
-      overrides: {
-
-        /*
-          El usuario solamente visualiza.
-        */
-
-        print: false,
-
-        printHighQuality: false,
-
-        modifyContents: false,
-
-        modifyAnnotations: false,
-
-        fillForms: false
-
-      }
-
-    },
-
-
-    /* =====================================
-       OCULTAR HERRAMIENTAS INNECESARIAS
+       OCULTAR HERRAMIENTAS
+       SIN DESACTIVAR LOS LINKS
        ===================================== */
 
     disabledCategories: [
 
-      /* Edición / anotaciones */
-      "annotation",
+      /*
+        IMPORTANTE:
+
+        NO incluir:
+        "annotation"
+
+        porque desactivaría también
+        la interacción de las anotaciones
+        del PDF.
+      */
+
+
+      /* Marcadores */
+
+      "annotation-markup",
+
+      "annotation-highlight",
+
+      "annotation-underline",
+
+      "annotation-strikeout",
+
+      "annotation-squiggly",
+
+
+      /* Dibujar */
+
+      "annotation-ink",
+
+
+      /* Texto y notas */
+
+      "annotation-text",
+
+
+      /* Sellos */
+
+      "annotation-stamp",
+
+
+      /* Formas */
+
+      "annotation-shape",
+
+      "annotation-rectangle",
+
+      "annotation-circle",
+
+      "annotation-line",
+
+      "annotation-arrow",
+
+      "annotation-polygon",
+
+      "annotation-polyline",
+
 
       /* Formularios */
+
       "form",
 
+
       /* Redacción */
+
       "redaction",
 
-      /* Insertar contenido */
+
+      /* Insertar elementos */
+
       "insert",
 
-      /* Historial de edición */
+
+      /* Historial */
+
       "history",
 
+
       /* Paneles laterales */
+
       "panel",
 
-      /* Diseños múltiples */
+
+      /* Vista doble */
+
       "spread",
 
+
       /* Rotación */
+
       "rotate",
 
-      /* Capturas */
+
+      /* Captura */
+
       "capture",
 
-      /* Impresión */
-      "document-print",
-
-      /* Exportar / descargar */
-      "document-export",
 
       /* Abrir otro PDF */
+
       "document-open",
 
+
       /* Cerrar documento */
+
       "document-close",
 
+
+      /* Imprimir */
+
+      "document-print",
+
+
+      /* Descargar / exportar */
+
+      "document-export",
+
+
       /* Protección */
+
       "document-protect",
 
+
       /* Captura de documento */
+
       "document-capture",
 
+
       /* UI de seguridad */
+
       "security",
 
-      /*
-        Quitamos las opciones avanzadas
-        de zoom de la toolbar.
-
-        El PDF sigue iniciando en FitPage.
-      */
-
-      "zoom",
 
       /*
-        NO ponemos:
+        Quitamos solamente zoom avanzado.
 
-        "navigation"
-        "scroll"
-        "page"
-
-        porque esas son precisamente
-        las funciones que queremos conservar.
+        NO quitamos completamente "zoom"
+        porque queremos conservar pinch,
+        ctrl + rueda, etc.
       */
+
+      "zoom-marquee"
 
     ]
 
@@ -387,11 +425,34 @@
 
 
   viewer.registry
-    .then(() => {
+    .then(registry => {
 
       console.log(
-        "Visor de catálogo listo"
+        "Visor listo"
       );
+
+
+      /*
+        Dejamos el sistema de anotaciones
+        en modo cursor/selección normal.
+
+        Esto es importante para permitir
+        interacción con links existentes.
+      */
+
+      const annotationPlugin =
+        registry
+          .getPlugin("annotation")
+          ?.provides();
+
+
+      if (annotationPlugin) {
+
+        annotationPlugin.setActiveTool(
+          null
+        );
+
+      }
 
     })
     .catch(error => {
